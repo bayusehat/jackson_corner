@@ -67,6 +67,7 @@
                             <div class="form-group">
                                 <label for="gender">Gender<span class="text-danger">*</span></label>
                                 <select name="gender" id="gender" class="form-control">
+                                    <option value="">Pilih Gender</option>
                                     <option value="LAKI-LAKI">Laki-laki</option>
                                     <option value="PEREMPUAN">Perempuan</option>
                                 </select>
@@ -107,7 +108,7 @@
                                 <span class="text-danger" id="valid_know_jackson_active"></span>
                             </div>
                             <div class="form-group kjf">
-                                <label for="know_jackson_from">Darimana mengetahui brand Jackson Active?<span class="text-danger">*</span></label>
+                                <label for="know_jackson_from">Darimana mengetahui brand Jackson Active?</label>
                                 <select name="know_jackson_from" id="know_jackson_from" class="form-control" onchange="otherFunc()">
                                     <option value="">Pilih Jawaban</option>
                                     <option value="SOSMED">Sosmed</option>
@@ -124,7 +125,15 @@
                             </div>
                         </div>
                         <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-primary btn-block" id="btnSubmit" onclick="addPlayer()">Create</button>
+                            <button type="button" class="btn btn-primary btn-block" id="btnSubmit" onclick="addPlayer()"><i class="fas fa-save"></i> Create</button>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12 col-xl-6">
+                                    <button type="button" class="btn btn-danger btn-block" id="btnCancel" onclick="cancelUpdate()"><i class="fas fa-times"></i>Cancel</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xl-6">
+                                    <button type="button" class="btn btn-success btn-block" id="btnUpdate" onclick="update()"><i class="fas fa-save"></i>Update</button>
+                                </div>
+                            </div>
                         </div>
                       </div>
                 </div>
@@ -161,7 +170,7 @@
             $(document).ready(function(){
                 $(".oa").hide();
                 $(".kjf").hide();
-                
+                createVal();
             })
             function otherFunc(){
                 var kjf = $("#know_jackson_from").val();
@@ -179,6 +188,34 @@
                 }else{
                     $(".kjf").hide();
                 }
+            }
+
+            function editVal(){
+                $("#btnUpdate").show();
+                $("#btnCancel").show();
+                $("#btnSubmit").hide()
+            }
+
+            function createVal(){
+                $("#btnUpdate").hide();
+                $("#btnCancel").hide();
+                $("#btnSubmit").show()
+            }
+
+            function cancelUpdate(){
+                $("#btnUpdate").hide();
+                $("#btnCancel").hide();
+                $("#btnSubmit").show();
+                $("#nama_lengkap").val(""),
+                $("#gender").val(""),
+                $("#whatsapp_number").val(""),
+                $("#email").val(""),
+                $("#username_instagram").val(""),
+                $("#usia").val(""),
+                $("#nama_komunitas").val(""),
+                $("#know_jackson_active").val("").trigger('change'),
+                $("#know_jackson_from").val("").trigger('change'),
+                $("#other_answer").val("").hide();
             }
 
             var id_event = $("#event_choose").val();
@@ -283,6 +320,37 @@
                             icon: 'error',
                             confirmButtonText: 'Back'
                         })
+                        }
+                    }
+                })
+            }
+
+            function edit(id){
+                editVal();
+                $.ajax({
+                    url : "{{ url('player/edit') }}/"+id,
+                    method : "GET",
+                    dataType: "JSON",
+                    success:function(e){
+                        if(e.status == 200){
+                            $("#nama_lengkap").val(e.data.nama_lengkap),
+                            $("#gender").val(e.data.gender).trigger('change'),
+                            $("#whatsapp_number").val(e.data.whatsapp_number),
+                            $("#email").val(e.data.email),
+                            $("#username_instagram").val(e.data.username_instagram),
+                            $("#usia").val(e.data.usia),
+                            $("#nama_komunitas").val(e.data.nama_komunitas),
+                            $("#know_jackson_active").val(e.data.know_jackson_active).trigger('change'),
+                            $("#know_jackson_from").val(e.data.know_jackson_from).trigger('change'),
+                            $("#other_answer").val(e.other_answer)
+                            $("#btnUpdate").att('onclick',`update(${e.data.id_player})`)
+                        }else{
+                                Swal.fire({
+                                title: 'Error!',
+                                text: e.message,
+                                icon: 'error',
+                                confirmButtonText: 'Back'
+                            })
                         }
                     }
                 })

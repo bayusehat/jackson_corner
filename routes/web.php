@@ -19,3 +19,6 @@ Route::get('/', function () {
 Route::get('player/load','App\Http\Controllers\PlayerController@loadList');
 Route::post('player/insert','App\Http\Controllers\PlayerController@insert');
 Route::get('player/delete/{id}','App\Http\Controllers\PlayerController@destroy');
+Route::get('player/code/{code}','App\Http\Controllers\PlayerController@checkCode');
+Route::get('player/edit/{id}','App\Http\Controllers\PlayerController@edit');
+Route::post('player/update/{id}','App\Http\Controllers\PlayerController@update');
