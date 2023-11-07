@@ -159,9 +159,9 @@
                                 </tbody>
                               </table>
                         </div>
-                        {{-- <div class="card-footer text-muted">
-                          2 days ago
-                        </div> --}}
+                        <div class="card-footer text-muted">
+                          <a href="{{ url('/access/remove') }}" class="btn btn-danger"><i class="fas fa-sign-out"></i> Logout This Session</a>
+                        </div>
                       </div>
                 </div>
             </div>
@@ -176,8 +176,10 @@
                 var kjf = $("#know_jackson_from").val();
                 if(kjf == 'OTHERS'){
                     $(".oa").show();
+                    $("#other_answer").val("")
                 }else{
                     $(".oa").hide();
+                    $("#other_answer").val("")
                 }
             }
 
@@ -185,8 +187,11 @@
                 var kjf = $("#know_jackson_active").val();
                 if(kjf == 'YA'){
                     $(".kjf").show();
+                    $("#know_jackson_from").val("")
                 }else{
                     $(".kjf").hide();
+                    $(".oa").hide();
+                    $("#know_jackson_from").val("")
                 }
             }
 

@@ -6,9 +6,30 @@ use Illuminate\Http\Request;
 use Validator;
 use DataTables;
 use App\Models\Player;
+use Str;
 
 class PlayerController extends Controller
 {
+    public function splash(){
+        return view('splashscreen');
+    }
+
+    public function getCodeAccess(Request $request){
+        $code = Str::lower($request->input('code_access'));
+        if($code == 'bcorner'){
+            session(['is_code_valid' => true]);
+            return response(['status' => 200, 'message'=> 'Code Access valid']);
+        }
+    
+        return response(['status' => 500, 'message' => 'Code Access not valid']);
+    }
+
+    public function removeCodeAccess(Request $request){
+        $request->session()->put('is_code_valid', false);
+        $request->session()->save();
+        return redirect('/access');
+    }
+
     public function loadList(Request $request){
         if ($request->ajax()) {
             $data = Player::all();
