@@ -50,6 +50,9 @@
         #tableListPeserta{
             font-size: 13px;
         }
+        .textExcel{
+            mso-number-format:"\@";/*force text*/
+        }
     </style>
 </head>
 <body>
@@ -266,6 +269,7 @@
                             <th>Kategori</th>
                             <th>Wali</th>
                             <th>No. HP Wali</th>
+                            <th>Di buat pada</th>
                         </tr>
                     </thead>
                     <tbody id="contentListPeserta">
@@ -438,10 +442,11 @@
                         <tr>
                             <td>${i+1}</td>
                             <td>${a.nama_peserta}</td>
-                            <td>${formatDate(a.tanggal_lahir)}</td>
+                            <td class="textExcel">${formatDate(a.tanggal_lahir)}</td>
                             <td>${kat}</td>
                             <td>${a.nama_wali}</td>
-                            <td>${a.nomor_handphone_wali}</td>
+                            <td class="textExcel">${"'"+a.nomor_handphone_wali}</td>
+                            <td class="textExcel">${formatDate(a.created_at,1)}</td>
                         </tr>`;
                     })
                     $("#contentListPeserta").html(html);
@@ -484,7 +489,7 @@
             }
         })
 
-
+        let regional = '{{ auth()->user()->id_regional }}';
 
         const kota = $.ajax({
             url : "{{ url('kota') }}",
@@ -496,6 +501,7 @@
                     html += `<option value="${a.id}">${a.nama.toUpperCase()}</option>`;
                 })
                 $("#kota").append(html);
+                $("#kota").val(regional).trigger('change').attr('disabled',true);
             }
         })
 
@@ -504,11 +510,13 @@
         })
     })
 
-    function formatDate(date){
+    function formatDate(date, hour = null){
         var gg = new Date(date);
         const tanggal = gg.getDate() < 10 ? '0'+gg.getDate() : gg.getDate();
         const bulan = ((gg.getMonth()) + 1) < 10 ? '0'+((gg.getMonth()) + 1) : ((gg.getMonth()) + 1);
-        return tanggal+'/'+bulan+'/'+gg.getFullYear();
+        const jam = hour != null ? ((gg.getHours()) < 10 ? '0'+gg.getHours() : gg.getHours()) +':'+((gg.getMinutes()) < 10 ? '0'+gg.getMinutes() : gg.getMinutes()) : '';
+        const resultDate = hour != null ? tanggal+'/'+bulan+'/'+gg.getFullYear()+' '+jam : tanggal+'/'+bulan+'/'+gg.getFullYear();;
+        return resultDate;
     }
 
     function getToko(kota){
