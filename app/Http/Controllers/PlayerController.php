@@ -20,7 +20,7 @@ class PlayerController extends Controller
             session(['is_code_valid' => true]);
             return response(['status' => 200, 'message'=> 'Code Access valid']);
         }
-    
+
         return response(['status' => 500, 'message' => 'Code Access not valid']);
     }
 
@@ -43,7 +43,7 @@ class PlayerController extends Controller
                     $actionBtn = '
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group mr-2" role="group" aria-label="First group">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="edit('.$row->id_players.')"><i class="fas fa-edit"></i></a> 
+                    <a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="edit('.$row->id_players.')"><i class="fas fa-edit"></i></a>
                     <a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="deletePlayer('.$row->id_players.')"><i class="fas fa-trash"></i></a>
                         </div>
                     </div>';
@@ -66,7 +66,7 @@ class PlayerController extends Controller
         ];
 
         $isValid = Validator::make($request->all(),$rules);
-        
+
         if($isValid->fails()){
             return response(['status' => 400, 'errors' => $isValid->errors()]);
         }else{
@@ -109,7 +109,7 @@ class PlayerController extends Controller
 
         return response(['status' => 500, 'message' => 'Data tidak ditemukan / tidak ada data!']);
     }
-    
+
 
     public function update(Request $request, $id_player){
         $p = Player::find($id_player);
@@ -125,7 +125,7 @@ class PlayerController extends Controller
         ];
 
         $isValid = Validator::make($request->all(),$rules);
-        
+
         if($isValid->fails()){
             return response(['status' => 400, 'errors' => $isValid->errors()]);
         }else{
@@ -148,6 +148,4 @@ class PlayerController extends Controller
             }
         }
     }
-
-
 }

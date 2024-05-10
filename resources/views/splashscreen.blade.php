@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Badminton Corner</title>
+        <title>Jackson Event</title>
         <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/img/icon.png') }}">
 
         <!-- Fonts -->
@@ -32,7 +32,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-        
+
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
@@ -44,10 +44,10 @@
         <div class="container-fluid mb-3">
             <div class="row">
                 <div class="col-md-4">
-                   
+
                 </div>
                 <div class="col-md-4 text-center">
-                    <img src="{{ asset('assets/img/logo.png')}}" class="img-responsive" width="300px" alt="Logo2">
+                    <img src="{{ asset('assets/img/logo-front.png')}}" class="img-responsive mt-5" width="300px" alt="Logo2">
                 </div>
                 <div class="col-md-4">
 
@@ -55,27 +55,44 @@
             </div>
             <div class="row mt-3">
                 <div class="col-md-4 col-xl-4 col-sm-12">
-                    
+
                 </div>
                 <div class="col-md-4 col-xl-4 col-sm-12">
                     <div class="card">
+                        <form method="post" action="{{ route('doLogin') }}">
+                            @csrf
                         <div class="card-header">
-                          Enter your code access
+                          Enter your access
                         </div>
                         <div class="card-body">
+                            @if(session('failed'))
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error!</strong> {{ session('failed') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
                             <div class="form-group">
-                                {{-- <label for="nama_lengkap"><span class="text-danger">*</span></label> --}}
-                                <input type="password" class="form-control" name="code_access" id="code_access" placeholder="Code Access">
-                                <span class="text-danger" id="valid_code_access"></span>
+                                <label for="email">Username</label>
+                                <input type="text" name="email" id="email" class="form-control" placeholder="Enter username" value="{{ old('email') }}">
+                                @error('email') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+                            <div class="form-group">
+                                <label for="Password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Enter password">
+                                @error('password') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+{{--                            <div class="form-group">--}}
+{{--                                --}}{{-- <label for="nama_lengkap"><span class="text-danger">*</span></label> --}}
+{{--                                <input type="password" class="form-control" name="code_access" id="code_access" placeholder="Code Access">--}}
+{{--                                <span class="text-danger" id="valid_code_access"></span>--}}
+{{--                            </div>--}}
                         </div>
                         <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-primary btn-block" id="btnSubmit" onclick="getAccess()"><i class="fas fa-save"></i> Submit</button>
+                            <button type="submit" class="btn btn-primary btn-block" id="btnSubmit"><i class="fas fa-enter"></i> Login</button>
                         </div>
-                      </div>
-                </div>
-                <div class="col-md-4 col-xl-4 col-sm-12">
-                    
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
