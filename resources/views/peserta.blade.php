@@ -53,6 +53,41 @@
         .textExcel{
             mso-number-format:"\@";/*force text*/
         }
+        #overlay{
+            position: absolute;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: rgba(0,0,0,0.6);
+        }
+        .cv-spinner {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px #ddd solid;
+            border-top: 4px #2e93e6 solid;
+            border-radius: 50%;
+            animation: sp-anime 0.8s infinite linear;
+        }
+        @keyframes sp-anime {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(359deg);
+            }
+        }
+        .is-hide{
+            display:none;
+        }
     </style>
 </head>
 <body>
@@ -119,8 +154,13 @@
                             <option value=""> Pilih Toko</option>
                         </select>
                     </div>
-                    <div class="form-group text-right">
-                        <button type="button" class="btn btn-primary " id="nextButton"><i class="fa fa-arrow-right"></i> Next</button>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-6">
+                            <a href="{{ url('/doLogout') }}" class="btn btn-danger"><i class="fa fa-sign-out"></i> Logout</a>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-6 text-right">
+                            <button type="button" class="btn btn-primary" id="nextButton"><i class="fa fa-arrow-right"></i> Next</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body" id="next-content">
@@ -193,6 +233,11 @@
 <div class="modal" tabindex="-1" role="dialog" id="myModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <div id="overlay">
+                <div class="cv-spinner">
+                    <span class="spinner"></span>
+                </div>
+            </div>
             <div class="modal-header">
                 <h5 class="modal-title">Summary</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -501,7 +546,10 @@
                     html += `<option value="${a.id}">${a.nama.toUpperCase()}</option>`;
                 })
                 $("#kota").append(html);
-                $("#kota").val(regional).trigger('change').attr('disabled',true);
+                if('{{ auth()->user()->email }}' != 'user' || '{{ auth()->user()->email }}' != 'superadmin' || '{{ auth()->user()->email }}' != 'admin'){
+                    $("#kota").val(regional).trigger('change').attr('disabled',true);
+                }
+
             }
         })
 
@@ -606,8 +654,13 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    beforeSend: function() {
+                        $("#overlay").fadeIn(300);
+                        $("#btnSubmit").attr('disabled',true);
+                    },
                     success:function(e){
                         if(e.status == 200){
+                            $("#overlay").fadeOut(300);
                             Swal.fire({
                                 title: "Success!",
                                 text: e.message,
@@ -625,7 +678,6 @@
                             })
                             $("#errorSection").show();
                             $("#errorMessage").append(html);
-                            // $("#btnRefresh").show();
                         }else{
                             Swal.fire({
                                 title: 'Error!',
@@ -634,7 +686,11 @@
                                 confirmButtonText: 'Back'
                             })
                         }
-                    }
+                    },
+                    // complete:function(){
+                    //     $("#overlay").fadeOut(300);
+                    //     $("#btnSubmit").attr('disabled',false);
+                    // }
                 })
         //     }
         // })
